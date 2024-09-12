@@ -1,5 +1,5 @@
 [workspace]
-members = ["./flutter_package/example/native/*", "./rust_crate"]
+members = ["./flutter_package/example/native/*", "./rust_crate", "test_base", "test_proc", "test_use"]
 resolver = "2"
 
 [patch.crates-io]

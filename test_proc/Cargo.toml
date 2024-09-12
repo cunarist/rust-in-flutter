@@ -1,0 +1,12 @@
+[package]
+name = "test_proc"
+edition = "2021"
+
+[dependencies]
+syn = "2"
+quote = "1"
+proc-macro2 = "1"
+test_base = { path = "../test_base" }
+
+[lib]
+proc-macro = true

@@ -1,0 +1,8 @@
+[package]
+name = "test_use"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+test_proc = { path = "../test_proc" }
+test_base = { path = "../test_base" }
