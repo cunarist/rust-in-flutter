@@ -4,6 +4,8 @@
 
 You can customize the behavior of Rinf CLI commands by configuring the `pubspec.yaml` file. All fields are optional and it's not necessary to write them.
 
+# TODO: Update the config
+
 ```{code-block} yaml
 :caption: pubspec.yaml
 rinf:

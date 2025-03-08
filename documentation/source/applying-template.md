@@ -20,9 +20,7 @@ Now install the command executable to easily run Rinf commands in the CLI.[^1]
 cargo install rinf
 ```
 
-Then, simply run this in the command-line[^2] from your Flutter project's directory.
-
-[^2]: If you encounter issues with the automated `protoc` installation, likely due to GitHub API access restrictions, you can [manually install it](https://grpc.io/docs/protoc-installation/) on your machine and add it to PATH. You can verify the installation by running the command `protoc --version` to ensure that the Protobuf compiler is ready on your machine. Rinf will detect and use the manually installed `protoc` if it exists.
+Then, simply run this in the command-line from your Flutter project's directory.
 
 ```{code-block} shell
 :caption: CLI
@@ -40,9 +38,6 @@ After running the command, you'll have new files and folders as your starter Rus
 *   │   ├── main.dart
     │   └── ...
     ├── linux/
-+   ├── messages/
-+   │   ├── basic.proto
-+   │   └── README.md
 +   ├── native/
 +   │   ├── hub/
 +   │   │   ├── src/

@@ -1,0 +1,22 @@
+[package]
+# Do not change the name of this crate.
+name = "hub"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+# `lib` is required for non-library targets,
+# such as tests and benchmarks.
+# `cdylib` is for Linux, Android, Windows, and web.
+# `staticlib` is for iOS and macOS.
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[dependencies]
+rinf = "7.3.0"
+serde = "1.0.218"
+bincode = "1.3.3"                                      # TODO: Think about bincode dependency
+tokio = { version = "1", features = ["rt", "macros"] }
+
+# Uncomment below to target the web.
+# tokio_with_wasm = { version = "0.8.1", features = ["rt", "macros"] }
+# wasm-bindgen = "0.2.95"

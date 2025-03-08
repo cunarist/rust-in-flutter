@@ -1,6 +1,6 @@
 # Confirm that the code and configuration files
 # are correctly formatted and analyzed.
-name: quality-control
+name: Quality Control
 
 on:
   push:
@@ -50,9 +50,9 @@ jobs:
           flutter pub get --directory flutter_package/
           flutter pub get --directory flutter_package/cargokit/build_tool
 
-      - name: Generate message files
+      - name: Generate signal files
         working-directory: flutter_package/example/
-        run: rinf message
+        run: rinf gen
 
       # Targets are basically combinations of
       # web/native and debug/release.
@@ -84,6 +84,28 @@ jobs:
 
       - name: Check if the code has changed
         run: git diff --exit-code
+
+  script:
+    name: python-script
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install pyright ruff
+
+      - name: Run Pyright
+        run: pyright
+
+      - name: Run Ruff
+        run: ruff check .
 
   config:
     name: configuration-files

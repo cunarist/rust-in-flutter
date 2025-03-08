@@ -12,7 +12,7 @@ use std::thread;
 static DART_ISOLATE: Mutex<Option<Isolate>> = Mutex::new(None);
 
 #[no_mangle]
-pub unsafe extern "C" fn prepare_isolate_extern(
+pub unsafe extern "C" fn rinf_prepare_isolate_extern(
     store_post_object: DartPostCObjectFnType,
     port: i64,
 ) {
@@ -101,12 +101,12 @@ where
 }
 
 #[no_mangle]
-pub extern "C" fn stop_rust_logic_extern() {
+pub extern "C" fn rinf_stop_rust_logic_extern() {
     SHUTDOWN_EVENTS.dart_stopped.set();
 }
 
 pub fn send_rust_signal_real(
-    message_id: i32,
+    endpoint: &str,
     message_bytes: Vec<u8>,
     binary: Vec<u8>,
 ) -> Result<(), RinfError> {
@@ -126,7 +126,7 @@ pub fn send_rust_signal_real(
 
     dart_isolate.post(
         vec![
-            message_id.into_dart(),
+            endpoint.into_dart(),
             if message_filled {
                 ZeroCopyBuffer(message_bytes).into_dart()
             } else {

@@ -54,65 +54,6 @@ fn get_cluster_info() -> Result<ClusterMap> {
 }
 ```
 
-## Reporting to Dart
-
-You might need to notify the user through the UI that an error occurred in Rust, providing hints on how to mitigate the problem, such as checking the network connection, trying again later, or verifying the username and password. The code below can serve as a good starting point for reporting Rust errors to Dart.
-
-```{code-block} proto
-:caption: Protobuf
-// [RUST-SIGNAL]
-// Your implementation of an error.
-// It might include a message, an error code, etc.
-message ErrorReport  {
-    string message = 1; // Human-readable explanation of the error
-    int32 error_code = 2; // An error code to distinguish problems
-}
-```
-
-```{code-block} rust
-:caption: Rust
-use anyhow::Result;
-use crate::messages::*;
-
-// Define a trait for reporting errors.
-pub trait Report {
-    fn report(self);
-}
-
-// Implement the Report trait for `Result<()>`.
-impl Report for Result<()>
-{
-    // Report the error to Dart.
-    // A Flutter widget might draw the error info on the screen.
-    fn report(self) {
-        if let Err(err) = self {
-            ErrorReport {
-                message: format!("Rust error: {:?}", err),
-                error_code: 25,
-            }
-            .send_signal_to_dart()
-        }
-    }
-}
-
-async fn make_http_request() -> Result<MyResponse> {
-    // Implementation for making an HTTP request.
-    // It can be any kind of failable function.
-}
-
-async fn top_level() -> Result<()> {
-    let my_response = make_http_request().await?;
-    // Do something with `my_response`.
-    // Additional processing may be written here.
-    Ok(())
-}
-
-async fn main_task() {
-    let result = top_level().await;
-    result.report();
-}
-```
-
 This is how to use a top-level function to report the propagated error. You will almost always use the `.report()` method because Rust automatically warns you about unused `Result`s.
 
 ## Logging

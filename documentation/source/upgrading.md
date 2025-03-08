@@ -27,11 +27,11 @@ Remove `RINF:` from Protobuf message annotations. For example, `[RINF:DART-SIGNA
 message SomeMessage {}
 ```
 
-Import messages from the root `messages` module, not from the inner module where they are declared.
+Import messages from the root `generated` module, not from the inner module where they are declared.
 
 ```{code-block} dart
 :caption: Dart
-import './messages/all.dart';
+import 'generated.dart';
 ```
 
 ```{code-block} rust
@@ -45,3 +45,9 @@ When you need to run a Flutter web server, use `rinf server` to get the complete
 :caption: CLI
 rinf server
 ```
+
+## Migrating from 7 to 8
+
+# TODO: Fill these in
+
+- Recursive signal derive is needed

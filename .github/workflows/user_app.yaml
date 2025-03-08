@@ -1,7 +1,7 @@
 # Verify that the documentation steps function as intended
 # when users utilize released versions
 # instead of the code from the repository.
-name: user-app
+name: User App
 
 on:
   workflow_dispatch:
@@ -11,21 +11,21 @@ on:
 jobs:
   build:
     name: ${{ matrix.runner }} / ${{ matrix.target }}
-    runs-on: ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}-latest
     strategy:
       fail-fast: false # Important
       matrix:
-        runner: [ubuntu-latest, windows-latest, macos-latest]
+        runner: [ubuntu, windows, macos]
         target: [android, web] # On all platforms
         include:
           # Specify targets for each platform
-          - runner: ubuntu-latest
+          - runner: ubuntu
             target: linux
-          - runner: windows-latest
+          - runner: windows
             target: windows
-          - runner: macos-latest
+          - runner: macos
             target: macos
-          - runner: macos-latest
+          - runner: macos
             target: ios
 
     steps:
@@ -33,6 +33,20 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            target
+            ~/.pub-cache
+          key: >
+            ${{ matrix.runner }}-${{ matrix.target }}
+            ${{ hashFiles('**/Cargo.toml', '**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ matrix.runner }}-${{ matrix.target }}
+            ${{ matrix.runner }}
 
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
@@ -58,7 +72,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install the CLI tool
         working-directory: rust_crate/

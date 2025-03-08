@@ -10,17 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  package_config: ^2.1.0
-  path: ^1.8.3
-  watcher: ^1.1.0
   ffi: ^2.1.0
-  yaml: ^3.1.2
-  args: ^2.5.0
-  chalkdart: ^2.2.1
   web: ^1.1.0
 
 dev_dependencies:
-  lints: ">=4.0.0 <6.0.0"
+  lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

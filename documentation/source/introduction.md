@@ -9,7 +9,7 @@ Rinf combines Flutter's UI ease with Rust's speed, enabling efficient, scalable 
    :file: _templates/icon_pair.html
 ```
 
-### Design
+## Design
 
 Rinf expects the application's main logic to be written in Rust, with Flutter solely managing the GUI.
 

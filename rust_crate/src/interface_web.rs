@@ -29,20 +29,20 @@ extern "C" {
     // in the main JavaScript thread. Loading the function
     // fails in web workers.
     #[wasm_bindgen(js_namespace = rinfBindings, catch)]
-    pub fn send_rust_signal_extern(
-        resource: i32,
+    pub fn rinf_send_rust_signal_extern(
+        endpoint: &str,
         message_bytes: Uint8Array,
         binary: Uint8Array,
     ) -> Result<(), JsValue>;
 }
 
 pub fn send_rust_signal_real(
-    message_id: i32,
+    endpoint: &str,
     message_bytes: Vec<u8>,
     binary: Vec<u8>,
 ) -> Result<(), RinfError> {
-    let result = send_rust_signal_extern(
-        message_id,
+    let result = rinf_send_rust_signal_extern(
+        endpoint,
         js_sys::Uint8Array::from(message_bytes.as_slice()),
         js_sys::Uint8Array::from(binary.as_slice()),
     );

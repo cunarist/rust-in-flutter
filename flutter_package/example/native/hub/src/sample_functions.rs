@@ -1,9 +1,11 @@
 //! This module is written for Rinf demonstrations.
 
 use crate::common::*;
-use crate::messages::*;
+use crate::signals::*;
 use rinf::debug_print;
 use std::time::Duration;
+
+// TODO: Organize asterisk imports
 
 // Using the `cfg` macro enables conditional statement.
 #[cfg(debug_assertions)]
@@ -177,16 +179,4 @@ pub async fn run_debug_tests() -> Result<()> {
     });
 
     Ok(())
-}
-
-// A dummy function that uses sample messages to eliminate warnings.
-#[allow(dead_code)]
-async fn use_messages() {
-    let _ = SampleInput::get_dart_signal_receiver();
-    SampleOutput {
-        kind: 3,
-        oneof_input: Some(sample_output::OneofInput::Age(25)),
-    }
-    .send_signal_to_dart();
-    let _ = DeeperDummy {};
 }

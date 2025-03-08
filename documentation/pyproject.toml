@@ -1,5 +1,5 @@
 [project]
 name = "documentation"
 version = "0.1.0"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = ["Sphinx~=8.2.0", "furo~=2024.8.6", "myst-parser~=4.0.1"]

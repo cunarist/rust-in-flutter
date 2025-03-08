@@ -1,29 +1,29 @@
-import os
-import sys
-import time
+from os import chdir, remove, system
+from pathlib import Path
+from sys import argv
+
+ROOT_DIR = Path(__file__).parent.parent
+COMMAND_ARG = 1
 
 
-def replace_text_in_file(filepath: str, change_from: str, change_to: str):
+def replace_text_once(filepath: Path, change_from: str, change_to: str):
     with open(filepath, mode="r", encoding="utf8") as file:
         content: str = file.read()
-    content = content.replace(change_from, change_to)
+    content = content.replace(change_from, change_to, 1)
     with open(filepath, mode="w", encoding="utf8") as file:
         file.write(content)
 
 
-if len(sys.argv) == 1:
-    print("Automation option is not provided.")
-    print("Use `python automate --help` to see all available operations.")
-
-elif sys.argv[1] == "cargokit-update":
+def update_cargokit():
     print("Updating CargoKit...")
     command = "git subtree pull"
     command += " --prefix flutter_package/cargokit"
     command += " https://github.com/irondash/cargokit.git"
     command += " main"
-    os.system(command)
+    system(command)
 
-elif sys.argv[1] == "prepare-test-app":
+
+def prepare_test_app():
     filepath = ".gitignore"
     with open(filepath, mode="r", encoding="utf8") as file:
         content: str = file.read()
@@ -32,47 +32,44 @@ elif sys.argv[1] == "prepare-test-app":
         file.write(content)
 
     command = "flutter create test_app"
-    os.system(command)
+    system(command)
 
-    os.chdir("./test_app/")
+    chdir(ROOT_DIR / "test_app")
 
     command = "dart pub add \"rinf:{'path':'../flutter_package'}\""
-    os.system(command)
+    system(command)
     command = "rinf template"
-    while os.system(command) != 0:
-        # Retry the command in case of failure,
-        # possibly due to GitHub API rate limiting
-        # associated with the 'protoc_prebuilt' crate.
-        time.sleep(60)
+    system(command)
 
-    os.remove("Cargo.toml")
+    remove("Cargo.toml")
 
     # Enable the web target, since it's not enabled by default.
-    replace_text_in_file(
-        "native/hub/src/lib.rs",
+    replace_text_once(
+        ROOT_DIR / "test_app" / "native" / "hub" / "src" / "lib.rs",
         "// use tokio_with_wasm::alias as tokio;",
         "use tokio_with_wasm::alias as tokio;",
     )
-    replace_text_in_file(
-        "native/hub/Cargo.toml",
+    replace_text_once(
+        ROOT_DIR / "test_app" / "native" / "hub" / "Cargo.toml",
         "# tokio_with_wasm",
         "tokio_with_wasm",
     )
-    replace_text_in_file(
-        "native/hub/Cargo.toml",
+    replace_text_once(
+        ROOT_DIR / "test_app" / "native" / "hub" / "Cargo.toml",
         "# wasm-bindgen",
         "wasm-bindgen",
     )
 
-    os.chdir("../")
+    chdir(ROOT_DIR)
 
-    replace_text_in_file(
-        "Cargo.toml",
+    replace_text_once(
+        ROOT_DIR / "Cargo.toml",
         "flutter_package/example/native/*",
         "test_app/native/*",
     )
 
-elif sys.argv[1] == "prepare-user-app":
+
+def prepare_user_app():
     filepath = ".gitignore"
     with open(filepath, mode="r", encoding="utf8") as file:
         content: str = file.read()
@@ -81,60 +78,75 @@ elif sys.argv[1] == "prepare-user-app":
         file.write(content)
 
     command = "flutter create user_app"
-    os.system(command)
+    system(command)
 
-    os.chdir("./user_app/")
+    chdir(ROOT_DIR / "user_app")
 
     command = "flutter pub add rinf"
-    os.system(command)
+    system(command)
     command = "rinf template"
-    while os.system(command) != 0:
-        # Retry the command in case of failure,
-        # possibly due to GitHub API rate limiting
-        # associated with the 'protoc_prebuilt' crate.
-        time.sleep(60)
+    system(command)
 
-    os.remove("Cargo.toml")
+    remove("Cargo.toml")
 
     # Enable the web target, since it's not enabled by default.
-    replace_text_in_file(
-        "native/hub/src/lib.rs",
+    replace_text_once(
+        ROOT_DIR / "user_app" / "native" / "hub" / "src" / "lib.rs",
         "// use tokio_with_wasm::alias as tokio;",
         "use tokio_with_wasm::alias as tokio;",
     )
-    replace_text_in_file(
-        "native/hub/Cargo.toml",
+    replace_text_once(
+        ROOT_DIR / "user_app" / "native" / "hub" / "Cargo.toml",
         "# tokio_with_wasm",
         "tokio_with_wasm",
     )
-    replace_text_in_file(
-        "native/hub/Cargo.toml",
+    replace_text_once(
+        ROOT_DIR / "user_app" / "native" / "hub" / "Cargo.toml",
         "# wasm-bindgen",
         "wasm-bindgen",
     )
 
-    os.chdir("../")
+    chdir(ROOT_DIR)
 
-    replace_text_in_file(
-        "Cargo.toml",
+    replace_text_once(
+        ROOT_DIR / "Cargo.toml",
         "flutter_package/example/native/*",
         "user_app/native/*",
     )
-    replace_text_in_file(
-        "Cargo.toml",
+    replace_text_once(
+        ROOT_DIR / "Cargo.toml",
         'rinf = { path = "./rust_crate" }',
         "",
     )
 
-elif sys.argv[1] == "prepare-example-app":
-    os.chdir("./flutter_package/example")
 
-    command = "rinf message"
-    while os.system(command) != 0:
-        # Retry the command in case of failure,
-        # possibly due to GitHub API rate limiting
-        # associated with the 'protoc_prebuilt' crate.
-        time.sleep(60)
+def prepare_example_app():
+    chdir(ROOT_DIR / "flutter_package" / "example")
 
-else:
-    print("No such option for automation is available.")
+    command = "rinf gen"
+    system(command)
+
+
+def run_command():
+    if len(argv) < COMMAND_ARG + 1:
+        print(
+            "Automation option is not provided;"
+            "\nUse `python automate --help` to see all available operations"
+        )
+        return
+
+    command = argv[COMMAND_ARG]
+    match command:
+        case "update-cargokit":
+            update_cargokit()
+        case "prepare-test-app":
+            prepare_test_app()
+        case "prepare-user-app":
+            prepare_user_app()
+        case "prepare-example-app":
+            prepare_example_app()
+        case _:
+            print("No such option for automation is available")
+
+
+run_command()

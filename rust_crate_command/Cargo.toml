@@ -1,0 +1,25 @@
+[package]
+name = "rinf_command"
+version = "7.3.0"
+edition = "2021"
+
+[dependencies]
+syn = { version = "2.0.98", features = ["full"] }
+quote = "1.0.38"
+serde = "1.0.218"
+serde_yml = "0.0.12"
+serde-reflection = "0.5.0"
+serde-generate = "0.29.0"
+clap = "4.5.31"
+owo-colors = "4.2.0"
+thiserror = "2.0.11"                              # TODO: Unify error handling mechanism
+include_dir = "0.7.4"
+convert_case = "0.8.0"
+notify = "8.0.0"
+
+# TODO: Reactivate warnings
+# [lints.clippy]
+# unwrap_used = "deny"
+# expect_used = "deny"
+
+# TODO: Go to Rust 2024

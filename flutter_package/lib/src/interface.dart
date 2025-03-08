@@ -1,9 +1,12 @@
-import 'dart:typed_data';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+
+// TODO: Is it okay to rely on Flutter?
 
 /// This type represents a function
 /// that can accept raw signal data from Rust
 /// and handle it accordingly.
-typedef AssignRustSignal = void Function(int, Uint8List, Uint8List);
+typedef AssignRustSignal = Map<String, Function(Uint8List, Uint8List)>;
 
 /// This contains a message from Rust.
 /// Optionally, a custom binary called `binary` can also be included.
@@ -19,4 +22,40 @@ class RustSignal<T> {
   final Uint8List binary;
 
   RustSignal(this.message, this.binary);
+}
+
+/// Whether to search for symbols in the local space of dynamic library.
+/// This is needed because of the different usage of
+/// `RTLD_LOCAL` and `RTLD_GLOBAL` between platforms.
+/// `RTLD_GLOBAL` is preferred as it has less overhead
+/// because extra `malloc` can be avoided in Flutter.
+final useLocalSpaceSymbols = checkSymbolSpace();
+
+/// Specifies whether to look up symbols in the local space of dynamic library.
+bool checkSymbolSpace() {
+  // On the web, this value doesn't mean anything.
+  // We just provide a dummy value here.
+  if (kIsWeb) {
+    return true;
+  }
+
+  // On Android, native library symbols are loaded in local space
+  // because of Flutter's `RTLD_LOCAL` behavior.
+  // Therefore we cannot use the efficient `RustLibraryGlobal`.
+  // - https://github.com/dart-lang/native/issues/923
+  if (Platform.isAndroid) {
+    return true;
+  }
+
+  // On Linux, `RTLD_LOCAL` behavior is required in tests
+  // due to symbol resolution behavior observed across all distributions.
+  // With `RTLD_GLOBAL`, symbols cannot be found.
+  final isTest = Platform.environment.containsKey('FLUTTER_TEST');
+  if (Platform.isLinux && isTest) {
+    return true;
+  }
+
+  // Native library symbols are loaded in global space
+  // thanks to Flutter's `RTLD_GLOBAL` behavior.
+  return false;
 }

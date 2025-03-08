@@ -21,18 +21,18 @@ Future<void> prepareInterfaceReal(
   await loadJsFile();
 
   // Listen to Rust via JavaScript.
-  rinfBindingsObject['send_rust_signal_extern'] = (
-    int messageId,
+  rinfBindingsObject['rinf_send_rust_signal_extern'] = (
+    String endpoint,
     Uint8List messageBytes,
     Uint8List binary,
   ) {
-    if (messageId == -1) {
-      // -1 is a special message ID for Rust reports.
+    if (endpoint == 'RinfPrint') {
+      // This is a special message ID for Rust reports.
       String rustReport = utf8.decode(binary);
       print(rustReport);
       return;
     }
-    assignRustSignal(messageId, messageBytes, binary);
+    assignRustSignal[endpoint]!(messageBytes, binary);
   }.jsify();
 }
 
@@ -40,7 +40,7 @@ void startRustLogicReal() {
   if (wasAlreadyLoaded) {
     return;
   }
-  wasmBindingsObject.callMethod('start_rust_logic_extern'.toJS);
+  wasmBindingsObject.callMethod('rinf_start_rust_logic_extern'.toJS);
 }
 
 void stopRustLogicReal() {
@@ -48,13 +48,12 @@ void stopRustLogicReal() {
 }
 
 void sendDartSignalReal(
-  int messageId,
+  String endpointSymbol,
   Uint8List messageBytes,
   Uint8List binary,
 ) {
   wasmBindingsObject.callMethod(
-    'send_dart_signal_extern'.toJS,
-    messageId.toJS,
+    endpointSymbol.toJS,
     messageBytes.toJS,
     binary.toJS,
   );

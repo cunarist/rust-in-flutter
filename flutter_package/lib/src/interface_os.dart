@@ -1,10 +1,10 @@
 import 'dart:ffi';
 import 'dart:typed_data';
-import 'load_os.dart';
 import 'dart:async';
 import 'dart:isolate';
-import 'interface.dart';
 import 'dart:convert';
+import 'load_os.dart';
+import 'interface.dart';
 
 /// Sets the exact file path of the dynamic library
 /// compiled from the `hub` crate.
@@ -20,7 +20,7 @@ Future<void> prepareInterfaceReal(
 
   // Listen to Rust via isolate port.
   rustSignalPort.listen((rustSignalRaw) {
-    final messageId = rustSignalRaw[0];
+    final endpoint = rustSignalRaw[0];
     var messageBytes = rustSignalRaw[1];
     var binary = rustSignalRaw[2];
     if (binary == null) {
@@ -28,7 +28,7 @@ Future<void> prepareInterfaceReal(
       // Converting is needed on the Dart side.
       binary = Uint8List(0);
     }
-    if (rustSignalRaw[0] == -1) {
+    if (rustSignalRaw[0] == 'RinfPrint') {
       // -1 is a special message ID for Rust reports.
       String rustReport = utf8.decode(binary);
       print(rustReport);
@@ -39,7 +39,7 @@ Future<void> prepareInterfaceReal(
       // Converting is needed on the Dart side.
       messageBytes = Uint8List(0);
     }
-    assignRustSignal(messageId, messageBytes, binary);
+    assignRustSignal[endpoint]!(messageBytes, binary);
   });
 
   // Make Rust prepare its isolate to send data to Dart.
@@ -59,9 +59,10 @@ void stopRustLogicReal() {
 }
 
 void sendDartSignalReal(
-  int messageId,
+  String endpointSymbol,
   Uint8List messageBytes,
   Uint8List binary,
 ) {
-  rustLibrary.sendDartSignal(messageId, messageBytes, binary);
+  final rustLibraryLocal = rustLibrary as RustLibraryLocal;
+  rustLibraryLocal.sendDartSignal(endpointSymbol, messageBytes, binary);
 }

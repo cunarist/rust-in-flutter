@@ -1,0 +1,11 @@
+# Python scripts manage code and automate tests.
+# We avoid shell scripts because they are platform-dependent.
+
+[tool.uv.workspace]
+members = ["documentation"]
+
+[tool.ruff]
+select = ["E", "F", "N", "I", "PL"]
+
+[tool.pyright]
+typeCheckingMode = "strict"

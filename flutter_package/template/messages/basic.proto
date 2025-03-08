@@ -1,8 +1,0 @@
-syntax = "proto3";
-package basic;
-
-// [DART-SIGNAL]
-message SmallText { string text = 1; }
-
-// [RUST-SIGNAL]
-message SmallNumber { int32 number = 1; }

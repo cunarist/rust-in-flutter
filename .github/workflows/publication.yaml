@@ -1,7 +1,7 @@
 # Publish packages online.
 # This is performed only when a new Git tag
 # with version information is added.
-name: publication
+name: Publication
 
 # With default Git settings, Unix-like systems use LF (`\n`) for new lines,
 # while Windows uses CRLF (`\r\n`) in local repositories.

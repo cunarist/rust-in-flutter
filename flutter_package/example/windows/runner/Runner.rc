@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.cunarist" "\0"
+            VALUE "CompanyName", "com.example" "\0"
             VALUE "FileDescription", "example_app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "example_app" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.cunarist. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "example_app.exe" "\0"
             VALUE "ProductName", "example_app" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

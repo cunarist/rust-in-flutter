@@ -48,9 +48,9 @@ where
 /// Send a signal to Dart.
 #[doc(hidden)]
 pub fn send_rust_signal(
-    message_id: i32,
+    endpoint: &str,
     message_bytes: Vec<u8>,
     binary: Vec<u8>,
 ) -> Result<(), RinfError> {
-    send_rust_signal_real(message_id, message_bytes, binary)
+    send_rust_signal_real(endpoint, message_bytes, binary)
 }

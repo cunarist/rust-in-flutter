@@ -1,0 +1,16 @@
+[package]
+name = "rinf_proc"
+version = "7.3.0"
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = "2.0.98"
+quote = "1.0.38"
+convert_case = "0.8.0"
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"

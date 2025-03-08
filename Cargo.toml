@@ -1,6 +1,13 @@
 [workspace]
-members = ["./flutter_package/example/native/*", "./rust_crate"]
 resolver = "2"
+members = [
+    "flutter_package/example/native/*",
+    "rust_crate",
+    "rust_crate_command",
+    "rust_crate_proc",
+]
 
 [patch.crates-io]
-rinf = { path = "./rust_crate" }
+rinf = { path = "rust_crate" }
+rinf_command = { path = "rust_crate_command" }
+rinf_proc = { path = "rust_crate_proc" }

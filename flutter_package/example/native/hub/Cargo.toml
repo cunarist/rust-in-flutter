@@ -13,7 +13,8 @@ crate-type = ["lib", "cdylib", "staticlib"]
 
 [dependencies]
 rinf = "7.3.0"
-prost = "0.13.0"
+serde = "1.0.218"
+bincode = "1.3.3" # TODO: Think about bincode dependency
 tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
 tokio_with_wasm = { version = "0.8.1", features = [
     "rt",

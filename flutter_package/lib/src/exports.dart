@@ -1,2 +1,2 @@
-export 'interface_os.dart' if (dart.library.html) 'interface_web.dart';
+export 'interface_os.dart' if (dart.library.js_interop) 'interface_web.dart';
 export 'interface.dart';

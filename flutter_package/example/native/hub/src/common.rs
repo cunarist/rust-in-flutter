@@ -8,6 +8,8 @@ pub use tokio_with_wasm::alias as tokio;
 /// Therefore, a single, flexible error type is recommended.
 pub type Result<T> = anyhow::Result<T>;
 
+// TODO: Always import directly from other crates
+
 /// Because spawn functions are used very often,
 /// we make them accessible from everywhere.
 pub use tokio::task::{spawn, spawn_blocking};

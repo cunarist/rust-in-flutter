@@ -4,7 +4,7 @@ library;
 import 'dart:typed_data';
 import 'src/exports.dart';
 
-export 'src/interface.dart' show RustSignal;
+export 'src/interface.dart' show RustSignal, useLocalSpaceSymbols;
 
 /// Starts the `main` function in Rust.
 Future<void> initializeRust(
@@ -27,14 +27,15 @@ void finalizeRust() async {
   stopRustLogicReal();
 }
 
-/// Sends a signal to Rust.
+/// Sends a signal to Rust by using a symbol
+/// that exists inside local space of the loaded dynamic library.
 void sendDartSignal(
-  int messageId,
+  String endpointSymbol,
   Uint8List messageBytes,
   Uint8List binary,
 ) async {
   sendDartSignalReal(
-    messageId,
+    endpointSymbol,
     messageBytes,
     binary,
   );
